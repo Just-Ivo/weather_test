@@ -18,21 +18,44 @@ class _WeatherScreenState extends State<WeatherScreen> {
   WeatherService weatherService = WeatherService();
   Weather? currentWeather;
   List<Weather>? forecast;
+  bool isLoading = true;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final cityName = ModalRoute.of(context)!.settings.arguments as String;
-    fetchWeather(cityName);
+    final cityName = ModalRoute.of(context)!.settings.arguments as String?;
+    if (cityName != null) {
+      fetchWeather(cityName);
+    } else {
+      // Handle error
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void fetchWeather(String cityName) async {
-    final weather = await weatherService.getCurrentWeather(cityName);
-    final forecastData = await weatherService.getWeatherForecast(cityName);
-    setState(() {
-      currentWeather = weather;
-      forecast = forecastData;
-    });
+    try {
+      final weather = await weatherService.getCurrentWeather(cityName);
+      final forecastData = await weatherService.getWeatherForecast(cityName);
+      setState(() {
+        currentWeather = weather;
+        forecast = forecastData;
+        isLoading = false;
+      });
+    } catch (e) {
+      // Handle error
+      print('Error fetching weather data: $e');
+      setState(() {
+        isLoading = false;
+      });
+      // Show error message to user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error fetching weather data: $e'),
+        ),
+      );
+    }
   }
 
   @override
@@ -42,15 +65,15 @@ class _WeatherScreenState extends State<WeatherScreen> {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-        image: AssetImage('assets/scaffoldbackground.jpg'),
-        fit: BoxFit.fill
+          image: AssetImage('assets/scaffoldbackground.jpg'),
+          fit: BoxFit.fill
         ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: currentWeather == null
+          body: isLoading
               ? const Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
                   child: Column(
@@ -58,7 +81,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       TimeAndDate(formattedDate: formattedDate, formattedTime: formattedTime),
                       const SizedBox(height: 30,),
                       WeatherContainer(weather: currentWeather!),
-                      //ForecastList(forecast: forecast!.sublist(0, 5)),
+                      if (forecast != null) ForecastList(forecast: forecast!.sublist(0, 5)),
                       const SizedBox(height: 20,),
                       WeatherDetails(weather: currentWeather!),
                     ],

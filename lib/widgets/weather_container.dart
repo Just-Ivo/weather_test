@@ -8,7 +8,7 @@ class WeatherContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return TextButton(
       onPressed: () {
         Navigator.pushNamed(
           context,

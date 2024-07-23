@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather/weather.dart';
+import 'package:intl/intl.dart'; // Import the intl package for date formatting
 
 class ForecastList extends StatelessWidget {
   final List<Weather> forecast;
@@ -14,6 +15,12 @@ class ForecastList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: forecast.length,
         itemBuilder: (context, index) {
+          // Convert the date to a weekday name
+          String dayName = '';
+          if (forecast[index].date != null) {
+            dayName = DateFormat('EEEE').format(forecast[index].date!);
+          }
+
           return Container(
             width: 100,
             margin: const EdgeInsets.all(8),
@@ -28,41 +35,34 @@ class ForecastList extends StatelessWidget {
                 Color.fromARGB(255, 2, 76, 67),
                 Color.fromARGB(255, 26, 149, 7),
                 Color.fromARGB(255, 4, 69, 61),
-
               ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-
             ),
-
-
-
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${forecast[index].date?.weekday}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18,
-                    ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  dayName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
                   ),
-
-                  Text(
-                    '${forecast[index].temperature?.celsius?.toStringAsFixed(0)} °C',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18,
-                    ),
+                ),
+                Text(
+                  '${forecast[index].temperature?.celsius?.toStringAsFixed(0)} °C',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
                   ),
-                  Icon(
-                    Icons.wb_sunny,
-                    size: 35,
-                    color: Colors.orange,
-                  ),
-                ],
-              ),
-
+                ),
+                const Icon(
+                  Icons.wb_sunny,
+                  size: 35,
+                  color: Colors.orange,
+                ),
+              ],
+            ),
           );
         },
       ),

@@ -83,7 +83,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       const SizedBox(height: 30,),
                       WeatherContainer(weather: currentWeather!),
                       const SizedBox(height: 50,),
-                      if (forecast != null) ForecastList(forecast: forecast!.sublist(0, 7)),
+                      if (forecast != null) ForecastList(forecast: forecast!.sublist(1, 7)),
                       const SizedBox(height: 75,),
                       WeatherDetails(weather: currentWeather!),
                     ],

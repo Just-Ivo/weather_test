@@ -8,6 +8,27 @@ class WeatherContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Image weatherDesc;
+    switch (weather.weatherDescription) {
+      case 'clear sky':
+        weatherDesc = Image(image: AssetImage('assets/01d.png'));
+      case 'few clouds':
+        Image(image: AssetImage('assets/02d.png'));
+      case 'scattered clouds':
+        Image(image: AssetImage('assets/03d.png'));
+      case 'broken clouds':
+        Image(image: AssetImage('assets/04d.png'));
+      case 'shower rain':
+        Image(image: AssetImage('assets/09d.png'));
+      case 'rain':
+        Image(image: AssetImage('assets/10d.png'));
+      case 'thunderstorm':
+        Image(image: AssetImage('assets/11d.png'));
+      case 'snow':
+        Image(image: AssetImage('assets/13d.png'));
+      case 'mist':
+        Image(image: AssetImage('assets/50d.png'));
+    }
     return TextButton(
       onPressed: () {
         Navigator.pushNamed(

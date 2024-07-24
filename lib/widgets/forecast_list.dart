@@ -18,7 +18,7 @@ class ForecastList extends StatelessWidget {
           // Convert the date to a weekday name
           String dayName = '';
           if (forecast[index].date != null) {
-            dayName = DateFormat('EEEE').format(forecast[index].date!);
+            dayName = DateFormat('h:mm a').format(forecast[index].date!);
           }
 
           return Container(

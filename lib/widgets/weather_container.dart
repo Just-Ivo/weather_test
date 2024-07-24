@@ -8,27 +8,26 @@ class WeatherContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Image weatherDesc;
-    switch (weather.weatherDescription) {
-      case 'clear sky':
-        weatherDesc = Image(image: AssetImage('assets/01d.png'));
-      case 'few clouds':
-        Image(image: AssetImage('assets/02d.png'));
-      case 'scattered clouds':
-        Image(image: AssetImage('assets/03d.png'));
-      case 'broken clouds':
-        Image(image: AssetImage('assets/04d.png'));
-      case 'shower rain':
-        Image(image: AssetImage('assets/09d.png'));
-      case 'rain':
-        Image(image: AssetImage('assets/10d.png'));
-      case 'thunderstorm':
-        Image(image: AssetImage('assets/11d.png'));
-      case 'snow':
-        Image(image: AssetImage('assets/13d.png'));
-      case 'mist':
-        Image(image: AssetImage('assets/50d.png'));
-    }
+    // switch (weather.weatherDescription) {
+    //   case 'clear sky':
+    //     Image.asset('lib/icons/01d.png');
+    //   case 'few clouds':
+    //     Image.asset('lib/icons/02d.png');
+    //   case 'scattered clouds':
+    //     Image.asset('lib/icons/03d.png');
+    //   case 'broken clouds':
+    //     Image.asset('lib/icons/04d.png');
+    //   case 'shower rain':
+    //     Image.asset('lib/icons/09d.png');
+    //   case 'rain':
+    //     Image.asset('lib/icons/10d.png');
+    //   case 'thunderstorm':
+    //     Image.asset('lib/icons/11d.png');
+    //   case 'snow':
+    //     Image.asset('lib/icons/13d.png');
+    //   case 'mist':
+    //     Image.asset('lib/icons/50d.png');
+    // }
     return TextButton(
       onPressed: () {
         Navigator.pushNamed(
@@ -61,13 +60,24 @@ class WeatherContainer extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.wb_sunny,
-              color: Colors.orange,
-              size: 100,
-            ),
+            if (weather.weatherDescription == 'clear sky') Image.asset('lib/icons/01d.png', scale: 0.75,),
+            if (weather.weatherDescription == 'few clouds') Image.asset('lib/icons/02d.png', scale: 0.75),
+            if (weather.weatherDescription == 'scattered clouds') Image.asset('lib/icons/03d.png', scale: 0.75),
+            if (weather.weatherDescription == 'broken clouds') Image.asset('lib/icons/04d.png', scale: 0.75),
+            if (weather.weatherDescription == 'shattered rain') Image.asset('lib/icons/09d.png', scale: 0.75),
+            if (weather.weatherDescription == 'rain') Image.asset('lib/icons/10d.png', scale: 0.75),
+            if (weather.weatherDescription == 'thunderstorm') Image.asset('lib/icons/11d.png', scale: 0.75),
+            if (weather.weatherDescription == 'snow') Image.asset('lib/icons/13d.png', scale: 0.75),
+            if (weather.weatherDescription == 'mist') Image.asset('lib/icons/50d.png', scale: 0.75),
+
+
+            // const Icon(
+            //   Icons.wb_sunny,
+            //   color: Colors.orange,
+            //   size: 100,
+            // ),
             const SizedBox(
-              width: 40,
+              width: 15,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,

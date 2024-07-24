@@ -10,7 +10,7 @@ class ForecastList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 150,
+      height: 180,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: forecast.length,
@@ -19,6 +19,40 @@ class ForecastList extends StatelessWidget {
           String dayName = '';
           if (forecast[index].date != null) {
             dayName = DateFormat('h:mm a').format(forecast[index].date!);
+          }
+
+          // Determine the appropriate icon asset based on the weather description
+          String weatherIcon;
+          switch (forecast[index].weatherDescription) {
+            case 'clear sky':
+              weatherIcon = 'lib/icons/01d.png';
+              break;
+            case 'few clouds':
+              weatherIcon = 'lib/icons/02d.png';
+              break;
+            case 'scattered clouds':
+              weatherIcon = 'lib/icons/03d.png';
+              break;
+            case 'broken clouds':
+              weatherIcon = 'lib/icons/04d.png';
+              break;
+            case 'shattered rain':
+              weatherIcon = 'lib/icons/09d.png';
+              break;
+            case 'rain':
+              weatherIcon = 'lib/icons/10d.png';
+              break;
+            case 'thunderstorm':
+              weatherIcon = 'lib/icons/11d.png';
+              break;
+            case 'snow':
+              weatherIcon = 'lib/icons/13d.png';
+              break;
+            case 'mist':
+              weatherIcon = 'lib/icons/50d.png';
+              break;
+            default:
+              weatherIcon = 'lib/icons/unknown.png'; // Fallback icon for unknown descriptions
           }
 
           return Container(
@@ -56,10 +90,11 @@ class ForecastList extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                const Icon(
-                  Icons.wb_sunny,
-                  size: 35,
-                  color: Colors.orange,
+                Image.asset(
+                  weatherIcon,
+                  width: 65,
+                  height: 65,
+                  fit: BoxFit.cover,
                 ),
               ],
             ),

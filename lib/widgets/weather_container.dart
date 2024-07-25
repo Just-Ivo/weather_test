@@ -88,7 +88,7 @@ class WeatherContainer extends StatelessWidget {
               weatherIcon = 'lib/icons/04d.png';
               break;
             default:
-              weatherIcon = 'lib/icons/unknown.png'; // Fallback icon for unknown descriptions
+              weatherIcon = 'lib/icons/01d.png'; // Fallback icon for unknown descriptions
           }
     return TextButton(
       onPressed: () {

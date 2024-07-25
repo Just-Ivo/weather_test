@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:weather/weather.dart';
 import 'package:weather_test/services/services.dart';
 import 'package:weather_test/widgets/submit_button.dart';
+import 'package:weather_test/widgets/weather_container.dart';
 
 class LocationSelectorScreen extends StatefulWidget {
   LocationSelectorScreen({super.key});
@@ -55,19 +57,52 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Invalid city name'),
+          title: Text('Error'),
           content: Text(message),
           actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+            Container(
+              width: 150,
+              height: 50,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Colors.white,
+                    Colors.grey,
+                    Colors.grey,
+                    Colors.white,
+                  ],
+                ),
+                border: Border.all(
+                  color: const Color.fromARGB(0, 76, 34, 34).withOpacity(1),
+                  width: 2.5,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  'OK',
+                  style: TextStyle(
+                    color: Colors.black,
+                    letterSpacing: 2,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
           ],
         );
       },
     );
+  }
+
+  Future<List<Weather>> _fetchMultipleCitiesWeather() async {
+    List<String> cities = ['Sofia', 'Burgas', 'Varna', 'Plovdiv', 'Pernik'];
+    List<Future<Weather>> weatherFutures =
+        cities.map((city) => weatherService.getCurrentWeather(city)).toList();
+    return await Future.wait(weatherFutures);
   }
 
   @override
@@ -108,60 +143,89 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
           ),
         ),
         padding: const EdgeInsets.all(16),
-        child: Center(
-          child: Column(
-            children: [
-              Text(
-                'Select your location',
-                style: GoogleFonts.playfairDisplay(
-                  textStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 2.5,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Type out your address',
-                style: GoogleFonts.playfairDisplay(
-                  textStyle: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 2.5,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
-              TextField(
-                controller: _controller,
-                cursorColor: Colors.white,
-                style: const TextStyle(
+        child: Column(
+          children: [
+            Text(
+              'Select your location',
+              style: GoogleFonts.playfairDisplay(
+                textStyle: const TextStyle(
                   color: Colors.white,
-                  fontStyle: FontStyle.italic,
-                  letterSpacing: 1.5,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2.5,
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Type out your address',
+              style: GoogleFonts.playfairDisplay(
+                textStyle: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2.5,
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            TextField(
+              controller: _controller,
+              cursorColor: Colors.white,
+              style: const TextStyle(
+                color: Colors.white,
+                fontStyle: FontStyle.italic,
+                letterSpacing: 1.5,
+                fontWeight: FontWeight.bold,
+              ),
+              decoration: const InputDecoration(
+                prefixIcon: Icon(
+                  Icons.location_city,
+                  color: Colors.white,
+                ),
+                label: Text('Location name'),
+                iconColor: Colors.white,
+                filled: false,
+                labelStyle: TextStyle(color: Colors.white),
+              ),
+            ),
+            const SizedBox(height: 16),
+            SubmitButton(
+              onPressed: submitHandler,
+              child: const Text(
+                'Submit',
+                style: TextStyle(
+                  color: Colors.black,
+                  letterSpacing: 2,
                   fontWeight: FontWeight.bold,
                 ),
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.location_city,
-                    color: Colors.white,
-                  ),
-                  label: Text('Location name'),
-                  iconColor: Colors.white,
-                  filled: false,
-                  labelStyle: TextStyle(color: Colors.white),
-                ),
               ),
-              const SizedBox(height: 16),
-              SubmitButton(
-                onPressed: submitHandler,
-                child: const Text('Submit'),
+            ),
+            const SizedBox(height: 30),
+            Expanded(
+              child: FutureBuilder<List<Weather>>(
+                future: _fetchMultipleCitiesWeather(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No data'));
+                  } else {
+                    return ListView(
+                      children: snapshot.data!
+                          .map((weather) => Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                child: WeatherContainer(weather: weather),
+                              ))
+                          .toList(),
+                    );
+                  }
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

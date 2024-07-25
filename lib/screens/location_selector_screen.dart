@@ -55,7 +55,7 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Error'),
+          title: Text('Invalid city name'),
           content: Text(message),
           actions: <Widget>[
             TextButton(

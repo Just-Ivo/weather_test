@@ -8,26 +8,88 @@ class WeatherContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // switch (weather.weatherDescription) {
-    //   case 'clear sky':
-    //     Image.asset('lib/icons/01d.png');
-    //   case 'few clouds':
-    //     Image.asset('lib/icons/02d.png');
-    //   case 'scattered clouds':
-    //     Image.asset('lib/icons/03d.png');
-    //   case 'broken clouds':
-    //     Image.asset('lib/icons/04d.png');
-    //   case 'shower rain':
-    //     Image.asset('lib/icons/09d.png');
-    //   case 'rain':
-    //     Image.asset('lib/icons/10d.png');
-    //   case 'thunderstorm':
-    //     Image.asset('lib/icons/11d.png');
-    //   case 'snow':
-    //     Image.asset('lib/icons/13d.png');
-    //   case 'mist':
-    //     Image.asset('lib/icons/50d.png');
-    // }
+    String weatherIcon;
+          switch (weather.weatherConditionCode) {
+            case 200:
+            case 201:
+            case 202:
+            case 210:
+            case 211:
+            case 212:
+            case 221:
+            case 230:
+            case 231:
+            case 232:
+              weatherIcon = 'lib/icons/11d.png';
+              break;
+            case 300:
+            case 301:
+            case 302:
+            case 310:
+            case 311:
+            case 312:
+            case 313:
+            case 314:
+            case 321:
+              weatherIcon = 'lib/icons/09d.png';
+              break;
+            case 500:
+            case 501:
+            case 502:
+            case 503:
+            case 504:
+              weatherIcon = 'lib/icons/10d.png';
+              break;
+            case 511:
+              weatherIcon = 'lib/icons/13d.png';
+              break;
+            case 520:
+            case 521:
+            case 522:
+            case 531:
+              weatherIcon = 'lib/icons/09d.png';
+              break;
+            case 600:
+            case 601:
+            case 602:
+            case 611:
+            case 612:
+            case 613:
+            case 615:
+            case 616:
+            case 620:
+            case 621:
+            case 622:
+              weatherIcon = 'lib/icons/13d.png';
+              break;
+            case 701:
+            case 711:
+            case 721:
+            case 731:
+            case 741:
+            case 751:
+            case 761:
+            case 762:
+            case 771:
+            case 781:
+              weatherIcon = 'lib/icons/50d.png';
+              break;
+            case 800:
+              weatherIcon = 'lib/icons/01d.png';
+              break;
+            case 801:
+              weatherIcon = 'lib/icons/02d.png';
+              break;
+            case 802:
+              weatherIcon = 'lib/icons/03d.png';
+              break;
+            case 803:
+            case 804:
+              weatherIcon = 'lib/icons/04d.png';
+              break;
+            default:
+              weatherIcon = 'lib/icons/unknown.png'; // Fallback icon for unknown descriptions
+          }
     return TextButton(
       onPressed: () {
         Navigator.pushNamed(
@@ -60,17 +122,12 @@ class WeatherContainer extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (weather.weatherDescription == 'clear sky') Image.asset('lib/icons/01d.png', scale: 0.75,),
-            if (weather.weatherDescription == 'few clouds') Image.asset('lib/icons/02d.png', scale: 0.75),
-            if (weather.weatherDescription == 'scattered clouds') Image.asset('lib/icons/03d.png', scale: 0.75),
-            if (weather.weatherDescription == 'broken clouds') Image.asset('lib/icons/04d.png', scale: 0.75),
-            if (weather.weatherDescription == 'shattered rain') Image.asset('lib/icons/09d.png', scale: 0.75),
-            if (weather.weatherDescription == 'rain') Image.asset('lib/icons/10d.png', scale: 0.75),
-            if (weather.weatherDescription == 'thunderstorm') Image.asset('lib/icons/11d.png', scale: 0.75),
-            if (weather.weatherDescription == 'snow') Image.asset('lib/icons/13d.png', scale: 0.75),
-            if (weather.weatherDescription == 'mist') Image.asset('lib/icons/50d.png', scale: 0.75),
-
-
+            Image.asset(
+              weatherIcon,
+              // width: 150,
+              // height: 150,
+              scale: 0.75,
+            ),
             // const Icon(
             //   Icons.wb_sunny,
             //   color: Colors.orange,

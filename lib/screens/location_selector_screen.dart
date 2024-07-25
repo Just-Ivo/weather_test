@@ -1,12 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:weather_test/services/services.dart';
 import 'package:weather_test/widgets/submit_button.dart';
 
-class LocationSelectorScreen extends StatelessWidget {
-  final TextEditingController _controller = TextEditingController();
-
+class LocationSelectorScreen extends StatefulWidget {
   LocationSelectorScreen({super.key});
+
+  @override
+  State<LocationSelectorScreen> createState() => _LocationSelectorScreenState();
+}
+
+class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
+  final TextEditingController _controller = TextEditingController();
+  final WeatherService weatherService = WeatherService();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> submitHandler() async {
+    try {
+      _validateInput(_controller.text);
+      await _fetchWeatherData(_controller.text);
+      Navigator.pushNamed(
+        context,
+        '/weather',
+        arguments: _controller.text,
+      );
+    } catch (e) {
+      _showErrorDialog("Enter city again");
+    }
+  }
+
+  void _validateInput(String value) {
+    if (value.trim().isEmpty) {
+      throw Exception('Please enter a location');
+    }
+  }
+
+  Future<void> _fetchWeatherData(String cityName) async {
+    try {
+      await weatherService.getCurrentWeather(cityName);
+      await weatherService.getWeatherForecast(cityName);
+    } catch (e) {
+      throw Exception('City not found');
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,13 +157,7 @@ class LocationSelectorScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               SubmitButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/weather',
-                    arguments: _controller.text,
-                  );
-                },
+                onPressed: submitHandler,
                 child: const Text('Submit'),
               ),
             ],

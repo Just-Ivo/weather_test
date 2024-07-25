@@ -27,7 +27,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
     if (cityName != null) {
       fetchWeather(cityName);
     } else {
-      // Handle error
       setState(() {
         isLoading = false;
       });
@@ -44,18 +43,31 @@ class _WeatherScreenState extends State<WeatherScreen> {
         isLoading = false;
       });
     } catch (e) {
-      // Handle error
-      print('Error fetching weather data: $e');
       setState(() {
         isLoading = false;
       });
-      // Show error message to user
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error fetching weather data: $e'),
-        ),
-      );
+      _showErrorDialog("Enter city again");
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

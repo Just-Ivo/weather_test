@@ -10,7 +10,7 @@ class ForecastList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 180,
+      height: 162,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: forecast.length,
@@ -21,35 +21,85 @@ class ForecastList extends StatelessWidget {
             dayName = DateFormat('h:mm a').format(forecast[index].date!);
           }
 
-          // Determine the appropriate icon asset based on the weather description
+          // Determine the appropriate icon asset based on the weather condition code
           String weatherIcon;
-          switch (forecast[index].weatherDescription) {
-            case 'clear sky':
-              weatherIcon = 'lib/icons/01d.png';
-              break;
-            case 'few clouds':
-              weatherIcon = 'lib/icons/02d.png';
-              break;
-            case 'scattered clouds':
-              weatherIcon = 'lib/icons/03d.png';
-              break;
-            case 'broken clouds':
-              weatherIcon = 'lib/icons/04d.png';
-              break;
-            case 'shattered rain':
-              weatherIcon = 'lib/icons/09d.png';
-              break;
-            case 'rain':
-              weatherIcon = 'lib/icons/10d.png';
-              break;
-            case 'thunderstorm':
+          switch (forecast[index].weatherConditionCode) {
+            case 200:
+            case 201:
+            case 202:
+            case 210:
+            case 211:
+            case 212:
+            case 221:
+            case 230:
+            case 231:
+            case 232:
               weatherIcon = 'lib/icons/11d.png';
               break;
-            case 'snow':
+            case 300:
+            case 301:
+            case 302:
+            case 310:
+            case 311:
+            case 312:
+            case 313:
+            case 314:
+            case 321:
+              weatherIcon = 'lib/icons/09d.png';
+              break;
+            case 500:
+            case 501:
+            case 502:
+            case 503:
+            case 504:
+              weatherIcon = 'lib/icons/10d.png';
+              break;
+            case 511:
               weatherIcon = 'lib/icons/13d.png';
               break;
-            case 'mist':
+            case 520:
+            case 521:
+            case 522:
+            case 531:
+              weatherIcon = 'lib/icons/09d.png';
+              break;
+            case 600:
+            case 601:
+            case 602:
+            case 611:
+            case 612:
+            case 613:
+            case 615:
+            case 616:
+            case 620:
+            case 621:
+            case 622:
+              weatherIcon = 'lib/icons/13d.png';
+              break;
+            case 701:
+            case 711:
+            case 721:
+            case 731:
+            case 741:
+            case 751:
+            case 761:
+            case 762:
+            case 771:
+            case 781:
               weatherIcon = 'lib/icons/50d.png';
+              break;
+            case 800:
+              weatherIcon = 'lib/icons/01d.png';
+              break;
+            case 801:
+              weatherIcon = 'lib/icons/02d.png';
+              break;
+            case 802:
+              weatherIcon = 'lib/icons/03d.png';
+              break;
+            case 803:
+            case 804:
+              weatherIcon = 'lib/icons/04d.png';
               break;
             default:
               weatherIcon = 'lib/icons/unknown.png'; // Fallback icon for unknown descriptions
@@ -92,8 +142,9 @@ class ForecastList extends StatelessWidget {
                 ),
                 Image.asset(
                   weatherIcon,
-                  width: 65,
-                  height: 65,
+                  // width: 35,
+                  // height: 35,
+                  scale: 0.75,
                   fit: BoxFit.cover,
                 ),
               ],

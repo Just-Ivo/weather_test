@@ -34,7 +34,7 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
         arguments: _controller.text,
       );
     } catch (e) {
-      _showErrorDialog("Enter city again");
+      _showErrorDialog("Wrong city, please enter again.");
     }
   }
 
@@ -102,9 +102,14 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
   Future<void> _showAddCityDialog() async {
     String? cityName = await _showCityInputDialog("Add City");
     if (cityName != null && cityName.isNotEmpty) {
-      setState(() {
-        cities.add(cityName);
-      });
+      try {
+        await _fetchWeatherData(cityName);
+        setState(() {
+          cities.add(cityName);
+        });
+      } catch (e) {
+        _showErrorDialog("Wrong city, please enter again.");
+      }
     }
   }
 
@@ -159,11 +164,11 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
               mainAxisSize: MainAxisSize.min,
               children: cities
                   .map((city) => ListTile(
-                        title: Text(city),
-                        onTap: () {
-                          Navigator.of(context).pop(city);
-                        },
-                      ))
+                title: Text(city),
+                onTap: () {
+                  Navigator.of(context).pop(city);
+                },
+              ))
                   .toList(),
             ),
           ),
@@ -182,7 +187,7 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
 
   Future<List<Weather>> _fetchMultipleCitiesWeather() async {
     List<Future<Weather>> weatherFutures =
-        cities.map((city) => weatherService.getCurrentWeather(city)).toList();
+    cities.map((city) => weatherService.getCurrentWeather(city)).toList();
     return await Future.wait(weatherFutures);
   }
 
@@ -287,12 +292,12 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: Icon(Icons.add, size: 40,),
+                  icon: Icon(Icons.add, size: 40),
                   color: Colors.white,
                   onPressed: _showAddCityDialog,
                 ),
                 IconButton(
-                  icon: Icon(Icons.remove, size: 40,),
+                  icon: Icon(Icons.remove, size: 40),
                   color: Colors.white,
                   onPressed: _showRemoveCityDialog,
                 ),
@@ -301,38 +306,38 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
             const SizedBox(height: 30),
             Expanded(
               child: Container(
-                width: 400,
+                width: 375,
                 child: FutureBuilder<List<Weather>>(
-                  future: _fetchMultipleCitiesWeather(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No data'));
-                    } else {
-                      return ListView(
-                        children: snapshot.data!
-                            .map((weather) => Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 15.0),
-                                  child: WeatherContainer(
-                                    weather: weather,
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        '/weather',
-                                        arguments: weather.areaName,
-                                      );
-                                    },
-                                  ),
-                                ))
-                            .toList(),
-                      );
-                    }
-                  },
-                ),
+                future: _fetchMultipleCitiesWeather(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No data'));
+                  } else {
+                    return ListView(
+                      children: snapshot.data!
+                          .map((weather) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                        child: WeatherContainer(
+                          weather: weather,
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/weather',
+                              arguments: weather.areaName,
+                            );
+                          },
+                        ),
+                      ))
+                          .toList(),
+                    );
+                  }
+                },
               ),
+            ),
             ),
           ],
         ),

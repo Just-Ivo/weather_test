@@ -118,6 +118,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
               : SingleChildScrollView(
                   child: Column(
                     children: [
+                      SizedBox(height: 50,),
                       TextButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/');

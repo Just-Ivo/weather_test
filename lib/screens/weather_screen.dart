@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
@@ -55,14 +57,40 @@ class _WeatherScreenState extends State<WeatherScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Error'),
+          title: Text('Error'),
           content: Text(message),
           actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+            Container(
+              width: 150,
+              height: 50,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Colors.white,
+                    Colors.grey,
+                    Colors.grey,
+                    Colors.white,
+                  ],
+                ),
+                border: Border.all(
+                  color: const Color.fromARGB(0, 76, 34, 34).withOpacity(1),
+                  width: 2.5,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  'OK',
+                  style: TextStyle(
+                    color: Colors.black,
+                    letterSpacing: 2,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -90,10 +118,65 @@ class _WeatherScreenState extends State<WeatherScreen> {
               : SingleChildScrollView(
                   child: Column(
                     children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/');
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                          //   gradient: const LinearGradient(
+                          //   colors: [
+                          //     Color.fromARGB(255, 0, 0, 0),
+                          //     Colors.grey,
+                          //     Colors.black,
+                              
+                          //     Colors.black,
+                          //     Colors.black,
+                          //     Colors.black,
+                              
+                          //     Colors.black,
+                          //     Colors.grey,
+                          //     Color.fromARGB(255, 0, 0, 0),
+                          //   ],
+                          // ),
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2.5,
+                          ),
+                          ),   
+                          child: Center(
+                            child: const Text(
+                              'Select a Location',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                letterSpacing: 2,
+                                
+                                
+                              ),
+                              ),
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 50,),
                       TimeAndDate(formattedDate: formattedDate, formattedTime: formattedTime),
                       const SizedBox(height: 30,),
-                      WeatherContainer(weather: currentWeather!),
+                      WeatherContainer(
+                        weather: currentWeather!,
+                        onTap: () {
+                          // Handle navigation or other actions
+                          Navigator.pushNamed(
+                            context,
+                            '/weather',
+                            arguments: currentWeather!.areaName,
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      
                       const SizedBox(height: 50,),
                       if (forecast != null) ForecastList(forecast: forecast!.sublist(1, 7)),
                       const SizedBox(height: 75,),

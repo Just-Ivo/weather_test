@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
 import 'package:weather_test/services/services.dart';
+import 'package:weather_test/widgets/select_location_button.dart';
 import 'package:weather_test/widgets/time_and_date.dart';
-import '../widgets/weather_container.dart';
-import '../widgets/forecast_list.dart';
-import '../widgets/weather_details.dart';
+import 'package:weather_test/widgets/weather_container.dart';
+import 'package:weather_test/widgets/forecast_list.dart';
+import 'package:weather_test/widgets/weather_details.dart';
+import 'package:weather_test/widgets/dialogs.dart';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -46,54 +48,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
       setState(() {
         isLoading = false;
       });
-      _showErrorDialog("Enter city again");
+      showErrorDialog(context, "Wrong city, please enter again.");
     }
-  }
-
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text(message),
-          actions: <Widget>[
-            Container(
-              width: 150,
-              height: 50,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    Colors.white,
-                    Colors.grey,
-                    Colors.grey,
-                    Colors.white,
-                  ],
-                ),
-                border: Border.all(
-                  color: const Color.fromARGB(0, 76, 34, 34).withOpacity(1),
-                  width: 2.5,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text(
-                  'OK',
-                  style: TextStyle(
-                    color: Colors.black,
-                    letterSpacing: 2,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -104,7 +60,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/scaffoldbackground.jpg'),
-          fit: BoxFit.fill
+          fit: BoxFit.fill,
         ),
       ),
       child: Padding(
@@ -116,49 +72,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
               : SingleChildScrollView(
                   child: Column(
                     children: [
-                      SizedBox(height: 50,),
-                      TextButton(
+                      SelectLocationButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/');
                         },
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                          //   gradient: const LinearGradient(
-                          //   colors: [
-                          //     Color.fromARGB(255, 0, 0, 0),
-                          //     Colors.grey,
-                          //     Colors.black,
-                              
-                          //     Colors.black,
-                          //     Colors.black,
-                          //     Colors.black,
-                              
-                          //     Colors.black,
-                          //     Colors.grey,
-                          //     Color.fromARGB(255, 0, 0, 0),
-                          //   ],
-                          // ),
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2.5,
-                          ),
-                          ),   
-                          child: Center(
-                            child: const Text(
-                              'Select a Location',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                letterSpacing: 2,
-                                
-                                
-                              ),
-                              ),
-                          ),
-                        ),
                       ),
                       const SizedBox(height: 50,),
                       TimeAndDate(formattedDate: formattedDate, formattedTime: formattedTime),
@@ -166,7 +83,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       WeatherContainer(
                         weather: currentWeather!,
                         onTap: () {
-                          // Handle navigation or other actions
                           Navigator.pushNamed(
                             context,
                             '/weather',

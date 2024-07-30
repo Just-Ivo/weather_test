@@ -89,13 +89,13 @@ class WeatherContainer extends StatelessWidget {
         weatherIcon = 'lib/icons/04d.png';
         break;
       default:
-        weatherIcon = 'lib/icons/01d.png'; // Fallback icon for unknown descriptions
+        weatherIcon = 'lib/icons/01d.png';
     }
     return GestureDetector(
       onTap: onTap,
       child: Container(
         height: 200,
-        width: 350,  // Set a fixed width for the container
+        width: 350,
         decoration: BoxDecoration(
           border: Border.all(
             color: Colors.black,

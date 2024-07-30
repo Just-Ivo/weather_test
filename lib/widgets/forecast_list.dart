@@ -102,7 +102,7 @@ class ForecastList extends StatelessWidget {
               weatherIcon = 'lib/icons/04d.png';
               break;
             default:
-              weatherIcon = 'lib/icons/unknown.png'; // Fallback icon for unknown descriptions
+              weatherIcon = 'lib/icons/unknown.png';
           }
 
           return Container(

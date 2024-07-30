@@ -4,6 +4,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:weather/weather.dart';
 import 'package:weather_test/services/services.dart';
 import 'package:weather_test/widgets/submit_button.dart';
+import 'package:weather_test/widgets/textfield.dart';
 import 'package:weather_test/widgets/weather_container.dart';
 import 'package:weather_test/widgets/dialogs.dart';
 import 'package:weather_test/widgets/weather_utils.dart';
@@ -127,26 +128,7 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
               ),
             ),
             const SizedBox(height: 30),
-            TextField(
-              controller: _controller,
-              cursorColor: Colors.white,
-              style: const TextStyle(
-                color: Colors.white,
-                fontStyle: FontStyle.italic,
-                letterSpacing: 1.5,
-                fontWeight: FontWeight.bold,
-              ),
-              decoration: const InputDecoration(
-                prefixIcon: Icon(
-                  Icons.location_city,
-                  color: Colors.white,
-                ),
-                label: Text('Location name'),
-                iconColor: Colors.white,
-                filled: false,
-                labelStyle: TextStyle(color: Colors.white),
-              ),
-            ),
+            StyledTextfield(controller: _controller),
             const SizedBox(height: 16),
             SubmitButton(
               onPressed: submitHandler,

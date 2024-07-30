@@ -92,6 +92,13 @@ Future<String?> showCityInputDialog(BuildContext context, String title) {
               bottom: 36,
               right: 36,
               child: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      const Color.fromARGB(255, 0, 46, 84),
+                      Colors.black,
+                      const Color.fromARGB(255, 0, 46, 84),
+                    ]),
+                    borderRadius: BorderRadius.circular(8)),
                 child: Row(
                   children: [
                     TextButton(
@@ -124,70 +131,66 @@ Future<String?> showCitySelectionDialog(
     context: context,
     builder: (BuildContext context) {
       return Dialog(
-  backgroundColor: Colors.transparent,
-  child: Stack(
-    children: [
-      Container(
-        margin: EdgeInsets.all(24),
-        padding: EdgeInsets.all(24),
-        width: 300,
-        height: 400,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('addcity.jpg'), fit: BoxFit.cover),
-          border: Border.all(color: Colors.white, width: 2),
-          borderRadius: BorderRadius.circular(8)),
-        child: Column(
+        backgroundColor: Colors.transparent,
+        child: Stack(
           children: [
-            StyledText('Remove City', 18),
-            SizedBox(
-              height: 20,
+            Container(
+              margin: EdgeInsets.all(24),
+              padding: EdgeInsets.all(24),
+              width: 300,
+              height: 400,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('addcity.jpg'), fit: BoxFit.cover),
+                  border: Border.all(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.circular(8)),
+              child: Column(
+                children: [
+                  StyledText('Remove City', 18),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: cities
+                            .map((city) => ListTile(
+                                  title: StyledText(city, 16),
+                                  onTap: () {
+                                    Navigator.of(context).pop(city);
+                                  },
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Flexible(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: cities
-                      .map((city) => ListTile(
-                            title: StyledText(city, 16),
-                            onTap: () {
-                              Navigator.of(context).pop(city);
-                            },
-                          ))
-                      .toList(),
+            CancelIcon(),
+            Positioned(
+              bottom: 36,
+              right: 36,
+              child: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      const Color.fromARGB(255, 0, 46, 84),
+                      Colors.black,
+                      const Color.fromARGB(255, 0, 46, 84),
+                    ]),
+                    borderRadius: BorderRadius.circular(8)),
+                child: TextButton(
+                  child: StyledText('Cancel', 12),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
               ),
             ),
           ],
         ),
-      ),
-      CancelIcon(),
-      Positioned(
-        bottom: 36,
-        right: 36,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                const Color.fromARGB(255, 0, 46, 84),
-                Colors.black,
-                const Color.fromARGB(255, 0, 46, 84),
-              ]
-            ),
-            borderRadius: BorderRadius.circular(8)
-          ),
-          child: TextButton(
-            child: StyledText('Cancel', 12),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
-      ),
-    ],
-  ),
-);
-
+      );
     },
   );
 }

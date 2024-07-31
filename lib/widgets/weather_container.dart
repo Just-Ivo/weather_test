@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:weather/weather.dart';
 
 class WeatherContainer extends StatelessWidget {
   final Weather weather;
   final VoidCallback onTap;
 
-  const WeatherContainer({super.key, required this.weather, required this.onTap});
+  const WeatherContainer(
+      {super.key, required this.weather, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -96,55 +98,79 @@ class WeatherContainer extends StatelessWidget {
       child: Container(
         height: 200,
         width: 350,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.black,
-            width: 3.5,
-          ),
-          borderRadius: BorderRadius.circular(15),
-          gradient: const LinearGradient(colors: [
-            Color.fromARGB(144, 8, 86, 175),
-            Color.fromARGB(255, 0, 150, 243),
-          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        // decoration: BoxDecoration(
+        //   border: Border.all(
+        //     color: Colors.black,
+        //     width: 3.5,
+        //   ),
+        //   borderRadius: BorderRadius.circular(15),
+        //   gradient: const LinearGradient(colors: [
+        //     Color.fromARGB(144, 8, 86, 175),
+        //     Color.fromARGB(255, 0, 150, 243),
+        //   ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+        // ),
+        child: Stack(
           children: [
-            Image.asset(
-              weatherIcon,
-              scale: 0.75,
+            Shimmer.fromColors(
+              baseColor: Color.fromARGB(255, 0, 15, 99),
+              highlightColor: Colors.blue,
+              period: Duration(seconds: 3),
+              child: Container(
+                height: 200,
+                width: 350,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 3.5,
+                  ),
+                  borderRadius: BorderRadius.circular(15),
+                  gradient: const LinearGradient(colors: [
+                    Color.fromARGB(144, 8, 86, 175),
+                    Color.fromARGB(255, 0, 150, 243),
+                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                ),
+              ),
             ),
-            const SizedBox(
-              width: 15,
-            ),
-            Column(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  weather.areaName ?? 'Unknown Location',
-                  style: const TextStyle(
-                    fontSize: 25,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Image.asset(
+                  weatherIcon,
+                  scale: 0.75,
                 ),
-                Text(
-                  '${weather.temperature?.celsius?.toStringAsFixed(0) ?? '--'} °C',
-                  style: const TextStyle(
-                    fontSize: 60,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                const SizedBox(
+                  width: 15,
                 ),
-                Text(
-                  weather.weatherDescription ?? '',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      weather.areaName ?? 'Unknown Location',
+                      style: const TextStyle(
+                        fontSize: 25,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${weather.temperature?.celsius?.toStringAsFixed(0) ?? '--'} °C',
+                      style: const TextStyle(
+                        fontSize: 60,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      weather.weatherDescription ?? '',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

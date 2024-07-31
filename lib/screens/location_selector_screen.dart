@@ -16,14 +16,26 @@ class LocationSelectorScreen extends StatefulWidget {
   State<LocationSelectorScreen> createState() => _LocationSelectorScreenState();
 }
 
-class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
+class _LocationSelectorScreenState extends State<LocationSelectorScreen> with SingleTickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
   final WeatherService weatherService = WeatherService();
   List<String> cities = ['Sofia', 'Burgas', 'Varna', 'Plovdiv'];
 
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 20),
+      vsync: this,
+    )..repeat(); // Infinite rotation
+  }
+
   @override
   void dispose() {
     _controller.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -94,107 +106,130 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
           ),
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/bg.jpg'),
-            fit: BoxFit.fill,
+      body: Stack(
+        children: [
+          // Background image
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/bg.jpg'),
+                fit: BoxFit.fill,
+              ),
+            ),
           ),
-        ),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Text(
-              'Select your location',
-              style: GoogleFonts.playfairDisplay(
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 2.5,
+          // Spinning Globe on top of the background image
+          Center(
+            child: RotationTransition(
+              turns: _animationController,
+              child: Opacity(
+                opacity: 0.4, // Adjust the opacity as needed
+                child: Image.asset(
+                  'assets/globe.png', // Your globe image path
+                  fit: BoxFit.contain,
+                  width: double.infinity, // Adjust the size of the globe as needed
+                  height: double.infinity,
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              'Type out your address',
-              style: GoogleFonts.playfairDisplay(
-                textStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 2.5,
-                ),
-              ),
-            ),
-            const SizedBox(height: 30),
-            StyledTextfield(controller: _controller),
-            const SizedBox(height: 16),
-            SubmitButton(
-              onPressed: submitHandler,
-              child: const Text(
-                'Submit',
-                style: TextStyle(
-                  color: Colors.black,
-                  letterSpacing: 2,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+          ),
+          // Main content on top of the spinning globe
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
               children: [
-                IconButton(
-                  icon: Icon(Icons.add, size: 40),
-                  color: Colors.white,
-                  onPressed: _showAddCityDialog,
+                Text(
+                  'Select your location',
+                  style: GoogleFonts.playfairDisplay(
+                    textStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 2.5,
+                    ),
+                  ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.remove, size: 40),
-                  color: Colors.white,
-                  onPressed: _showRemoveCityDialog,
+                const SizedBox(height: 10),
+                Text(
+                  'Type out your address',
+                  style: GoogleFonts.playfairDisplay(
+                    textStyle: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 2.5,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                StyledTextfield(controller: _controller),
+                const SizedBox(height: 16),
+                SubmitButton(
+                  onPressed: submitHandler,
+                  child: const Text(
+                    'Submit',
+                    style: TextStyle(
+                      color: Colors.black,
+                      letterSpacing: 2,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.add, size: 50),
+                      color: Colors.white,
+                      onPressed: _showAddCityDialog,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.remove, size: 50),
+                      color: Colors.white,
+                      onPressed: _showRemoveCityDialog,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+                Expanded(
+                  child: Container(
+                    width: 375,
+                    child: FutureBuilder<List<Weather>>(
+                      future: fetchMultipleCitiesWeather(weatherService, cities),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Center(child: Text('No data'));
+                        } else {
+                          return ListView(
+                            children: snapshot.data!
+                                .map((weather) => Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                      child: WeatherContainer(
+                                        weather: weather,
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                            context,
+                                            '/weather',
+                                            arguments: weather.areaName,
+                                          );
+                                        },
+                                      ),
+                                    ))
+                                .toList(),
+                          );
+                        }
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 30),
-            Expanded(
-              child: Container(
-                width: 375,
-                child: FutureBuilder<List<Weather>>(
-                  future: fetchMultipleCitiesWeather(weatherService, cities),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No data'));
-                    } else {
-                      return ListView(
-                        children: snapshot.data!
-                            .map((weather) => Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 15.0),
-                                  child: WeatherContainer(
-                                    weather: weather,
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        '/weather',
-                                        arguments: weather.areaName,
-                                      );
-                                    },
-                                  ),
-                                ))
-                            .toList(),
-                      );
-                    }
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

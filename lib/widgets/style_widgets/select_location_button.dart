@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_test/widgets/style_widgets/styledtext.dart';
 
 class SelectLocationButton extends StatelessWidget {
   const SelectLocationButton({
@@ -26,22 +27,19 @@ class SelectLocationButton extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
         border: Border.all(
-          color: const Color.fromARGB(0, 76, 34, 34).withOpacity(1),
+          color: Colors.grey,
           width: 2.5,
         ),
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextButton(
         onPressed: onPressed,
-        child: const Text(
+        child: const StyledText(
           'Select Location',
-          style: TextStyle(
-            color: Colors.white,
-            letterSpacing: 2,
-            fontWeight: FontWeight.bold,
+          18
           ),
         ),
-      ),
-    );
+      );
+  
   }
 }

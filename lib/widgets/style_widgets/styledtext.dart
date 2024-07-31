@@ -6,7 +6,7 @@ class StyledText extends StatelessWidget {
   const StyledText(this.text, this.size, {super.key});
 
   final text;
-  final size;
+  final double size;
   @override
   Widget build(BuildContext context) {
     return Text(

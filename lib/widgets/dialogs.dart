@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:weather_test/widgets/cancel_icon.dart';
-import 'package:weather_test/widgets/dialog_button.dart';
-import 'package:weather_test/widgets/styledtext.dart';
-import 'package:weather_test/widgets/textfield.dart';
+import 'package:weather_test/widgets/style_widgets/cancel_icon.dart';
+import 'package:weather_test/widgets/style_widgets/dialog_button.dart';
+import 'package:weather_test/widgets/style_widgets/styledtext.dart';
+import 'package:weather_test/widgets/style_widgets/textfield.dart';
 
 Future<void> showErrorDialog(BuildContext context, String message) {
   return showDialog(
@@ -18,7 +18,7 @@ Future<void> showErrorDialog(BuildContext context, String message) {
               height: 450,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('burning_plane.jpg'),
+                    image: AssetImage('assets/burning_plane.jpg'),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(8),
@@ -72,14 +72,14 @@ Future<String?> showCityInputDialog(BuildContext context, String title) {
               height: 250,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('addcity.jpg'), fit: BoxFit.cover),
+                      image: AssetImage('assets/addcity.jpg'), fit: BoxFit.cover),
                   border: Border.all(color: Colors.white, width: 2),
                   borderRadius: BorderRadius.circular(8)),
               child: FractionallySizedBox(
                   widthFactor: 0.8,
                   child: Column(
                     children: [
-                      StyledText('Enter City Name', 18),
+                      StyledText('Enter City Name', 16),
                       SizedBox(
                         height: 10,
                       ),
@@ -141,7 +141,7 @@ Future<String?> showCitySelectionDialog(
               height: 400,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('addcity.jpg'), fit: BoxFit.cover),
+                      image: AssetImage('assets/addcity.jpg'), fit: BoxFit.cover),
                   border: Border.all(color: Colors.white, width: 2),
                   borderRadius: BorderRadius.circular(8)),
               child: Column(
